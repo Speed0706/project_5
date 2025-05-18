@@ -109,3 +109,57 @@ const converter = (element, target1, target2) => {
 converter(somInput, usdInput, eurInput)
 converter(usdInput, somInput, eurInput)
 converter(eurInput, somInput, usdInput)
+
+
+
+//CARD SWITCHER
+
+
+const cardBlock = document.querySelector('.card');
+const btnNext = document.querySelector('#btn-next');
+const btnPrev = document.querySelector('#btn-prev');
+let cardId = 1; // Начнем с первой карточки
+
+const fetchAndUpdateCard = (id) => {
+    fetch(`https://jsonplaceholder.typicode.com/todos/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            const { id, title, completed } = data
+            cardBlock.innerHTML = `
+                <p>${title}</p>
+                <p style="color: ${completed ? 'green' : 'red'}">${completed}</p>
+                <span>${id}</span>
+            `;
+        })
+        .catch(error => {
+            console.error('Ошибка при загрузке данных:', error)
+            cardBlock.innerHTML = `<p>Ошибка загрузки данных</p>`
+        });
+};
+
+const updateCardId = (direction) => {
+    if (direction === 'next') {
+        cardId = cardId >= 200 ? 1 : cardId + 1
+    } else if (direction === 'prev') {
+        cardId = cardId <= 1 ? 200 : cardId - 1
+    }
+    fetchAndUpdateCard(cardId)
+};
+
+fetchAndUpdateCard(cardId)
+
+btnNext.onclick = () => updateCardId('next')
+btnPrev.onclick = () => updateCardId('prev')
+
+
+//fetch запрос
+
+
+fetch('https://jsonplaceholder.typicode.com/posts')
+    .then(response => response.json())
+    .then(posts => {
+        console.log('Данные:', posts);
+    })
+    .catch(error => {
+        console.error('ERROR:', error);
+    });
